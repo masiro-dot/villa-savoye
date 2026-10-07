@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#e9eeea">
+  <title>Villa Savoye — 建築を歩く</title>
+  <meta name="description" content="サヴォア邸の光、プロポーション、空間を探る軽量なインタラクティブ建築模型。">
+  <link rel="stylesheet" href="./style.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/"}}</script>
+</head>
+<body>
+  <header class="masthead"><a class="brand" href="./"><span class="brandmark">a.</span> ARCHITECTURE ATLAS</a><span class="edition">MODERN MASTERPIECES <b>／ 001</b></span><button id="about-open" class="text-button">モデルについて <span>↗</span></button></header>
+  <main>
+    <aside class="sidebar">
+      <div class="intro"><div class="eyebrow"><span class="dot"></span> POISSY, FRANCE · 1928–1931</div><h1>Villa<br> Savoye<span class="title-dot">.</span></h1><p class="jp-title">サヴォア邸</p><p class="architect">Le Corbusier & Pierre Jeanneret</p><p class="description">地面から浮かぶ白い箱。<br>光と風景をつなぐ、建築のプロムナード。</p></div>
+      <section class="controls"><h2><span>01</span> 空間をひらく</h2><div class="layer-list">
+        <label><span>屋根・ソラリウム</span><input data-layer="roof" type="checkbox" checked><i></i></label>
+        <label><span>外壁</span><input data-layer="walls" type="checkbox" checked><i></i></label>
+        <label><span>ガラス</span><input data-layer="glass" type="checkbox" checked><i></i></label>
+        <label><span>家具 <small>参考配置</small></span><input data-layer="furniture" type="checkbox"><i></i></label>
+      </div><button id="section" class="outline-button">⌑ <span>内部を見る</span> <span class="button-arrow">↗</span></button><button id="courtyard-view" class="outline-button">中庭の建具を見る <span>↗</span></button><button id="ramp-view" class="outline-button">中庭のスロープを見る <span>↗</span></button><button id="ramp-walk" class="outline-button">スロープから中庭を見る <span>↗</span></button><button id="service-door-view" class="outline-button">反対側の1階の扉を見る <span>↗</span></button><button id="service-side-view" class="outline-button">1階の緑の側壁を見る <span>↗</span></button><button id="service-view" class="outline-button">1階の背面を見る <span>↗</span></button><button id="entrance-view" class="outline-button">1階の玄関を見る <span>↗</span></button><button id="stair-view" class="outline-button">螺旋階段を見る <span>↗</span></button></section>
+      <section class="light-control"><h2><span>02</span> 光をととのえる</h2><div class="range-label"><span>自然光</span><output id="sun-value">14:00</output></div><input id="sun" aria-label="太陽の時刻イメージ" type="range" min="9" max="17" step="0.25" value="14"><div class="range-ends"><span>朝</span><span>夕</span></div><label class="quality-label">表示品質<select id="quality"><option value="auto">自動</option><option value="low">軽量</option><option value="high">高品質</option></select></label></section>
+      <div class="sidebar-foot"><span class="tiny-rule"></span><p>LES HEURES CLAIRES</p><span>新しい建築のための五つの原則</span></div>
+    </aside>
+    <section class="stage" aria-label="サヴォア邸のインタラクティブ3Dモデル">
+      <div id="canvas-wrap"><div id="loading"><span class="loading-line"></span>模型を組み立てています…</div></div>
+      <div class="stage-top"><span class="view-badge"><span class="dot"></span><span id="view-name">外観 / PERSPECTIVE</span></span><div class="stage-tools"><button id="rotate" aria-label="自動回転" title="自動回転" aria-pressed="false">⟳</button><button id="reset" aria-label="初期ビューに戻す" title="初期ビューに戻す">⌂</button><button id="fullscreen" aria-label="全画面表示" title="全画面表示">⛶</button></div></div>
+      <div class="compass" aria-hidden="true"><span>N</span><div id="compass-needle">↑</div><small>NW</small></div>
+      <div id="annotations" class="annotations"></div>
+      <div class="stage-caption"><span class="caption-line"></span><p id="caption">ピロティが支える、自由なファサード。</p><small id="caption-en">THE HOUSE ABOVE THE GROUND</small></div>
+      <nav class="view-nav" aria-label="プリセットビュー"><button data-view="exterior" class="active"><span>01</span> 外観</button><button data-view="front"><span>02</span> 正面</button><button data-view="side"><span>03</span> 側面</button><button data-view="roof"><span>04</span> 屋上</button><button data-view="plan"><span>05</span> 平面</button><button data-view="ground"><span>06</span> ピロティ</button><button data-view="roofdetail" aria-pressed="false"><span>07</span>屋上詳細</button></nav>
+      <div class="stage-bottom"><span class="gestures">ドラッグで回転 <i>·</i> スクロール / ピンチで拡大 <i>·</i> 右ドラッグ / 2本指で移動</span><span class="scale-bar">5 m <b></b></span></div>
+    </section>
+  </main>
+  <footer><span><span class="status-dot"></span> INTERACTIVE ARCHITECTURAL STUDY</span><span id="stats">1 unit = 1 m</span><button class="text-button" id="features-toggle" aria-pressed="false">五つの原則を表示 ＋</button></footer>
+  <dialog id="about"><button id="about-close" class="dialog-close" aria-label="閉じる">×</button><div class="eyebrow">ABOUT THIS MODEL</div><h2>空間を読むための模型。</h2><p>revision 3。公式公開平面図・原図複製・各方向の写真を照合した、プレゼンテーション向けの簡略再構成です。実測モデルではありません。外形を約19 × 21.5 m、柱の基準間隔を4.75 mとして設定。階高、柱径、開口、曲率、間仕切りなどは推定値です。</p><p>中央の折り返しスロープ、居住階の屋外庭園、屋上ソラリウム、曲面の玄関ホールと螺旋階段を表現しています。家具と外構は参考配置。方位と光の時刻は説明用のイメージで、実際の日射計算ではありません。</p><h3>参照した公開資料</h3><a href="https://www.villa-savoye.fr/content/download/9824393/file/document-visite-villa-savoye-FR-2021.pdf?inLanguage=fre-FR&version=3" target="_blank" rel="noreferrer">Centre des monuments nationaux — 公式訪問ガイド・平面図 ↗</a><a href="https://www.fondationlecorbusier.fr/oeuvre-architecture/realisations-villa-savoye-et-loge-du-jardinier-poissy-france-1928-1931/" target="_blank" rel="noreferrer">Fondation Le Corbusier — Villa Savoye ↗</a><a href="./MODEL_AUDIT.md" target="_blank">形状の再調査・修正記録 ↗</a><a href="./plan-audit.svg" target="_blank">モデルの各階輪郭図 ↗</a><p class="dialog-note">Three.js r180 · 手続き型テクスチャ · 事前生成環境マップ<br>寸法は building.js、質感は materials.js で編集できます。</p></dialog>
+  <script type="module" src="./app.js"></script>
+</body></html>
