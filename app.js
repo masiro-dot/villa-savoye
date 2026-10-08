@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
-import { createMaterials, createEnvironment } from './materials.js';
-import { createBuilding, DIMENSIONS } from './building.js';
+import { createMaterials, createEnvironment } from './materials.js?v=20261008-ui2';
+import { createBuilding, DIMENSIONS } from './building.js?v=20261008-ui2';
 
 const wrap=document.querySelector('#canvas-wrap'), stage=document.querySelector('.stage');
 const $=s=>document.querySelector(s);
@@ -37,7 +37,7 @@ const presets={
   entrance:{position:[0,1.55,8.7],target:[0,1.55,5.9],fov:85,name:'玄関 / RECESSED ENTRANCE',caption:'曲面ガラスの間に引き込まれた、黒い両開き扉。',en:'THE RECESSED DOOR BETWEEN CURVED GLAZED WINGS'},
   stairdetail:{position:[-1.5,1.6,5.0],target:[-3.3,1.7,1.55],fov:65,name:'螺旋階段 / RETURN STAIR',caption:'白い連続した側壁と、黒い手すりを持つ回り階段。',en:'THE CURVING STAIR IN THE ENTRANCE HALL'},
 };
-let currentView='exterior',transition=null,section=false,savedVisibility=null,annotationEnabled=false,selectedPin=-1;
+let currentView='exterior',transition=null,annotationEnabled=false,selectedPin=-1;
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let queued=0,frameId=0,lastTime=0,active=false;
 function invalidate(frames=2){queued=Math.max(queued,frames);if(!frameId)frameId=requestAnimationFrame(render);}
@@ -62,26 +62,9 @@ function view(key,animate=false){const p=presets[key];currentView=key;
   document.querySelectorAll('[data-view]').forEach(b=>{const state=b.dataset.view===key;b.classList.toggle('active',state);b.setAttribute('aria-pressed',String(state));});invalidate(80);
 }
 document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>view(b.dataset.view)));
-$('#courtyard-view').addEventListener('click',()=>{if(section)$('#section').click();view('courtyard');});
-$('#ramp-view').addEventListener('click',()=>{if(section)$('#section').click();view('rampdetail');});
-$('#ramp-walk').addEventListener('click',()=>{if(section)$('#section').click();view('rampwalk');});
-$('#stair-view').addEventListener('click',()=>{if(section)$('#section').click();view('stairdetail');});
-$('#entrance-view').addEventListener('click',()=>{if(section)$('#section').click();view('entrance');});
-$('#service-door-view').addEventListener('click',()=>{if(section)$('#section').click();view('servicedoorleft');});
-$('#service-side-view').addEventListener('click',()=>{if(section)$('#section').click();view('serviceside');});
-$('#service-view').addEventListener('click',()=>{if(section)$('#section').click();view('service');});
 view('exterior',false);
 function updateVisibility(){document.querySelectorAll('[data-layer]').forEach(c=>{model.layers[c.dataset.layer].visible=c.checked;});model.layers.frames.visible=model.layers.glass.visible;invalidate(3);}
-document.querySelectorAll('[data-layer]').forEach(c=>c.addEventListener('change',()=>{
-  if(section&&c.dataset.layer==='furniture')savedVisibility.furniture=c.checked;
-  else if(section){section=false;savedVisibility=null;$('#section').classList.remove('active');$('#section').setAttribute('aria-pressed','false');$('#section span').textContent='内部を見る';}
-  updateVisibility();
-}));
-$('#section').addEventListener('click',()=>{
-  section=!section;$('#section').classList.toggle('active',section);$('#section').setAttribute('aria-pressed',String(section));$('#section span').textContent=section?'外観に戻す':'内部を見る';
-  if(section){savedVisibility={};document.querySelectorAll('[data-layer]').forEach(c=>{savedVisibility[c.dataset.layer]=c.checked;if(['roof','walls','glass'].includes(c.dataset.layer))c.checked=false;});updateVisibility();view('plan');}
-  else{document.querySelectorAll('[data-layer]').forEach(c=>c.checked=savedVisibility[c.dataset.layer]);updateVisibility();savedVisibility=null;view('exterior');}
-});
+document.querySelectorAll('[data-layer]').forEach(c=>c.addEventListener('change',updateVisibility));
 $('#rotate').addEventListener('click',()=>{controls.autoRotate=!controls.autoRotate;$('#rotate').setAttribute('aria-pressed',String(controls.autoRotate));invalidate(2);});
 $('#reset').addEventListener('click',()=>{controls.autoRotate=false;$('#rotate').setAttribute('aria-pressed','false');view('exterior');});
 $('#fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await stage.requestFullscreen();}catch{$('#caption').textContent='このブラウザでは全画面表示を利用できません。';}invalidate(3);});
@@ -93,7 +76,7 @@ const features=[
   {p:[7.1,1.7,9.5],title:'01 / ピロティ',text:'細い柱が居住階を持ち上げ、地上を庭園と自動車の動線へ開放します。'},
   {p:[0,5.1,10.75],title:'02 / 水平連続窓',text:'柱と独立した外壁に設けた窓が、風景を水平につなぎます。'},
   {p:[9.5,4.2,-6],title:'03 / 自由なファサード',text:'外壁は構造を支える役割から解放され、開口を自由に配置できます。'},
-  {p:[-4.2,4.2,-2],title:'04 / 自由な平面',text:'柱と床の構造により、室内の間仕切りは自由に配置できます。「内部を見る」で確認。'},
+  {p:[-4.2,4.2,-2],title:'04 / 自由な平面',text:'柱と床の構造により、室内の間仕切りは自由に配置できます。外壁と屋根の表示を切り替えて確認できます。'},
   {p:[5,6.8,7],title:'05 / 屋上庭園',text:'居住階の屋外庭園からスロープを上がると、曲面壁が囲む屋上ソラリウムへ。'},
 ];
 const pins=features.map((f,i)=>{const b=document.createElement('button');b.className='pin';b.textContent=String(i+1).padStart(2,'0');b.setAttribute('aria-label',f.title);b.hidden=true;$('#annotations').appendChild(b);b.addEventListener('click',()=>{selectedPin=i;showPin();invalidate(3);});return b;});
